@@ -1,0 +1,13 @@
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182334;font:16px Arial,sans-serif}
+.topbar{display:flex;justify-content:space-between;padding:18px 7%;background:#102b4e;color:white}
+.topbar a{color:white}.topbar span{color:#c6d5e7;font-size:13px;margin-left:8px}
+.container{max-width:850px;margin:36px auto;padding:0 18px}.hero{text-align:center;margin:35px 0}
+.hero h1{font-size:34px;margin:8px}.eyebrow{color:#1769aa;font-weight:bold;letter-spacing:2px;font-size:12px}
+.panel{background:white;border-radius:12px;padding:24px;margin:18px 0;box-shadow:0 5px 22px #122b4e12}
+label{display:block;font-weight:bold;margin:14px 0}input,textarea{display:block;width:100%;padding:12px;margin-top:7px;border:1px solid #ccd5df;border-radius:7px;font:inherit}
+textarea{min-height:120px;resize:vertical}button{border:0;border-radius:7px;padding:12px 18px;background:#1769aa;color:white;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}.secondary{background:#e8f0f8;color:#174b78}
+#result,#trackResult{margin-top:14px;line-height:1.5}.muted{color:#64748b;font-size:13px}
+.ticket{padding:12px;border:1px solid #e0e7ef;border-radius:8px;margin:10px 0}
+footer{text-align:center;color:#64748b;padding:30px;font-size:13px}
+@media(max-width:600px){.hero h1{font-size:26px}.topbar{padding:16px;gap:10px}}

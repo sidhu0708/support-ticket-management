@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support Desk</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div><strong>SupportDesk</strong><span> Customer Support Portal</span></div>
+    <a href="#admin">Admin view</a>
+  </header>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">WE ARE HERE TO HELP</p>
+      <h1>How can we help you today?</h1>
+      <p>Submit a support ticket and our team will get back to you.</p>
+    </section>
+    <section class="panel">
+      <h2>Submit a ticket</h2>
+      <form id="ticketForm">
+        <label>Full name<input name="name" required maxlength="80"></label>
+        <label>Email address<input name="email" type="email" required maxlength="120"></label>
+        <label>Subject<input name="subject" required maxlength="120"></label>
+        <label>Issue description<textarea name="description" required minlength="10" maxlength="3000"></textarea></label>
+        <button id="submitBtn" type="submit">Submit ticket</button>
+      </form>
+      <div id="result" role="status" aria-live="polite"></div>
+    </section>
+    <section class="panel">
+      <h2>Track a ticket</h2>
+      <form id="trackForm">
+        <label>Ticket ID<input name="ticketId" required></label>
+        <button type="submit" class="secondary">Check status</button>
+      </form>
+      <div id="trackResult" role="status" aria-live="polite"></div>
+    </section>
+    <section class="panel" id="admin">
+      <h2>Admin – recent tickets</h2>
+      <p class="muted">Demo endpoint. In production, protect this route with authentication and authorization.</p>
+      <button id="refreshBtn" class="secondary" type="button">Refresh tickets</button>
+      <div id="ticketList"></div>
+    </section>
+  </main>
+  <footer>SupportDesk • AWS Serverless Demo</footer>
+  <script src="app.js"></script>
+</body>
+</html>
