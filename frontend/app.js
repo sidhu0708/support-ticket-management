@@ -1,4 +1,4 @@
-const API_BASE = "REPLACE_WITH_API_GATEWAY_BASE_URL";
+const API_BASE = "https://y5thy7fn6l.execute-api.eu-north-1.amazonaws.com/prod";
 const result = document.getElementById("result");
  
 document.getElementById("ticketForm").addEventListener("submit", async (e) => {
