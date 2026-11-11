@@ -15,7 +15,7 @@ pipeline {
                     echo "Checking project files..."
 
                     test -f frontend/index.html
-                    test -f frontend/style.css
+                    test -f frontend/styles.css
                     test -f frontend/app.js
 
                     echo "All required frontend files are present."
