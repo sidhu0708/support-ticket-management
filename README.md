@@ -27,4 +27,4 @@ issue description, ticket status and timestamps.
 - Region: ap-south-1
 - Subscription Status: Confirmed
 
-
+GitHub webhook integration tested successfully.
