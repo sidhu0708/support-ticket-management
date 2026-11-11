@@ -13,11 +13,9 @@ pipeline {
             steps {
                 sh '''
                     echo "Checking project files..."
-
                     test -f frontend/index.html
                     test -f frontend/styles.css
                     test -f frontend/app.js
-
                     echo "All required frontend files are present."
                 '''
             }
@@ -29,10 +27,32 @@ pipeline {
             }
         }
 
-        stage('Pipeline Success') {
+        stage('Deploy to S3') {
             steps {
-                echo 'Support Ticket Management pipeline completed successfully!'
+                sh '''
+                    aws s3 sync frontend/ s3://support-ticket-frontend-sidhu-2026/ --delete
+                    echo "Frontend deployed to S3 successfully."
+                '''
             }
+        }
+
+        stage('Invalidate CloudFront') {
+            steps {
+                sh '''
+                    aws cloudfront create-invalidation \
+                    --distribution-id E2SJOUTJPYZNM4 \
+                    --paths "/*"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Support Ticket Management deployed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check Console Output.'
         }
     }
 }
