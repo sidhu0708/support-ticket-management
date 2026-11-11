@@ -8,6 +8,7 @@ on:
     paths:
       - "frontend/**"
       - ".github/workflows/deploy-frontend.yml"
+
   workflow_dispatch:
 
 permissions:
@@ -20,27 +21,73 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout GitHub repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Verify AWS configuration
+      - name: Verify AWS configuration
+        env:
+          ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+          REGION: ${{ vars.AWS_REGION }}
+          BUCKET: ${{ vars.S3_BUCKET }}
+          DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          echo "Checking AWS configuration..."
+
+          echo "AWS Region: $REGION"
+          echo "AWS Role ARN: $ROLE_ARN"
+          echo "S3 Bucket: $BUCKET"
+          echo "CloudFront Distribution ID: $DISTRIBUTION_ID"
+
+          if [ -z "$ROLE_ARN" ]; then
+            echo "ERROR: AWS_ROLE_ARN is missing"
+            exit 1
+          fi
+
+          if [ -z "$REGION" ]; then
+            echo "ERROR: AWS_REGION is missing"
+            exit 1
+          fi
+
+          if [ -z "$BUCKET" ]; then
+            echo "ERROR: S3_BUCKET is missing"
+            exit 1
+          fi
+
+          if [ -z "$DISTRIBUTION_ID" ]; then
+            echo "ERROR: CLOUDFRONT_DISTRIBUTION_ID is missing"
+            exit 1
+          fi
+
+          echo "AWS configuration verification successful."
+
+      # Step 3: Authenticate with AWS using GitHub OIDC
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ vars.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      # Step 4: Verify AWS identity
       - name: Verify AWS identity
-        run: aws sts get-caller-identity
+        run: |
+          aws sts get-caller-identity
 
+      # Step 5: Deploy frontend files to S3
       - name: Deploy frontend to S3
         run: |
           aws s3 sync frontend/ s3://${{ vars.S3_BUCKET }}/ --delete
 
+      # Step 6: Invalidate CloudFront cache
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
             --paths "/*"
 
+      # Step 7: Deployment completion
       - name: Deployment completed
-        run: echo "Frontend successfully deployed to S3 and CloudFront cache invalidated."
+        run: |
+          echo "Frontend successfully deployed to S3."
+          echo "CloudFront cache invalidation requested."
