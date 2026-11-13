@@ -22,7 +22,7 @@ pipeline {
                     test -f backend/app.py
                     test -f backend/requirements.txt
 
-                    echo "All required files are present."
+                    echo "All required project files are present."
                 '''
             }
         }
@@ -35,6 +35,7 @@ pipeline {
                     python3 -m py_compile backend/app.py
 
                     echo "Backend syntax validation successful."
+                    echo "Frontend build validation completed."
                 '''
             }
         }
@@ -42,9 +43,11 @@ pipeline {
         stage('Deploy Frontend to S3') {
             steps {
                 sh '''
+                    echo "Deploying frontend to S3..."
+
                     aws s3 sync frontend/ s3://support-ticket-frontend-sidhu-2026/ --delete
 
-                    echo "Frontend deployed successfully."
+                    echo "Frontend deployed to S3 successfully."
                 '''
             }
         }
@@ -52,11 +55,13 @@ pipeline {
         stage('Invalidate CloudFront') {
             steps {
                 sh '''
+                    echo "Invalidating CloudFront cache..."
+
                     aws cloudfront create-invalidation \
                     --distribution-id E2SJOUTJPYZNM4 \
                     --paths "/*"
 
-                    echo "CloudFront cache invalidation requested."
+                    echo "CloudFront invalidation requested."
                 '''
             }
         }
@@ -68,7 +73,7 @@ pipeline {
 
                     sudo /usr/local/bin/deploy-support-ticket-backend
 
-                    echo "Backend deployment completed."
+                    echo "Backend deployed to EC2 successfully."
                 '''
             }
         }
@@ -76,6 +81,8 @@ pipeline {
         stage('Verify Backend') {
             steps {
                 sh '''
+                    echo "Checking EC2 backend health..."
+
                     sleep 3
 
                     curl --fail http://localhost:3000/health
@@ -88,11 +95,11 @@ pipeline {
 
     post {
         success {
-            echo 'Frontend and backend deployment completed successfully!'
+            echo 'Support Ticket Management frontend and backend deployed successfully!'
         }
 
         failure {
-            echo 'Deployment failed. Check Jenkins Console Output.'
+            echo 'Pipeline failed. Check Console Output for details.'
         }
     }
 }
